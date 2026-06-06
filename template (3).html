@@ -1,0 +1,437 @@
+
+
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>🌍 Геотест по-пацански | Вайбкодинг</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #eef2f5;
+            font-family: system-ui, 'Segoe UI', 'Inter', 'Roboto', sans-serif;
+            padding: 2rem 1rem;
+            color: #1e2f3e;
+        }
+
+        .test-container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .card {
+            background: white;
+            border-radius: 42px;
+            box-shadow: 0 20px 35px -12px rgba(0, 0, 0, 0.12);
+            overflow: hidden;
+            padding: 1.8rem 2rem 2rem 2rem;
+            transition: all 0.2s;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 1.5rem;
+        }
+
+        h1 {
+            font-size: 1.8rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #1f5e3a, #2b8c5e);
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+            margin-bottom: 0.3rem;
+        }
+
+        .sub {
+            color: #4f6f8f;
+            font-size: 0.9rem;
+            border-top: 1px solid #d8e2ec;
+            padding-top: 0.6rem;
+            margin-top: 0.4rem;
+        }
+
+        .progress-area {
+            margin: 1rem 0 0.8rem;
+            background: #e2eaf1;
+            border-radius: 40px;
+            height: 8px;
+        }
+
+        .progress-fill {
+            width: 0%;
+            height: 100%;
+            background: #2b8c5e;
+            border-radius: 40px;
+            transition: width 0.3s;
+        }
+
+        .question-counter {
+            text-align: right;
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: #4f6f8f;
+            margin-bottom: 1.2rem;
+        }
+
+        .question-text {
+            font-size: 1.5rem;
+            font-weight: 650;
+            line-height: 1.35;
+            margin: 0.5rem 0 1.8rem;
+            color: #0c2e41;
+        }
+
+        .options-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.8rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .option {
+            background: #f8fbfe;
+            border: 1px solid #cbdbe0;
+            border-radius: 30px;
+            padding: 0.9rem 1.2rem;
+            cursor: pointer;
+            transition: 0.2s;
+            font-weight: 500;
+            color: #1f3b4c;
+        }
+
+        .option:hover {
+            background: #eef3fc;
+            border-color: #90adc2;
+            transform: translateX(5px);
+        }
+
+        .option.selected {
+            background: #e2f0ea;
+            border-color: #2b8c5e;
+            box-shadow: 0 4px 12px rgba(43,140,94,0.15);
+            color: #0f583b;
+        }
+
+        .feedback-area {
+            background: #f0f5fa;
+            border-radius: 24px;
+            padding: 1rem 1.3rem;
+            margin: 1rem 0 1.2rem;
+            border-left: 5px solid #2b8c5e;
+            font-size: 0.9rem;
+        }
+
+        .nav-buttons {
+            display: flex;
+            justify-content: space-between;
+            gap: 1rem;
+            margin-top: 0.3rem;
+        }
+
+        button {
+            background: white;
+            border: 1px solid #c0d2e2;
+            padding: 0.7rem 1.4rem;
+            border-radius: 40px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: 0.2s;
+            color: #2c4e6e;
+        }
+
+        button.primary {
+            background: #2b8c5e;
+            border: none;
+            color: white;
+        }
+
+        button.primary:hover {
+            background: #22734d;
+            transform: scale(0.97);
+        }
+
+        .restart-btn {
+            margin-top: 1.6rem;
+            width: 100%;
+            background: #eef2f7;
+            border-color: #cbdbe0;
+        }
+
+        .result-card {
+            animation: fadeIn 0.35s ease;
+            text-align: center;
+        }
+
+        .verdict {
+            font-size: 2rem;
+            font-weight: 800;
+            margin: 0.8rem 0;
+            padding: 0.5rem;
+            border-radius: 60px;
+            background: #f0f4f9;
+        }
+
+        footer {
+            text-align: center;
+            font-size: 0.75rem;
+            color: #6c8dae;
+            margin-top: 2rem;
+            padding-top: 1.2rem;
+            border-top: 1px solid #d8e2ec;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px);}
+            to { opacity: 1; transform: translateY(0);}
+        }
+
+        @media (max-width: 620px) {
+            .card {
+                padding: 1.4rem;
+            }
+            .question-text {
+                font-size: 1.3rem;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="test-container">
+    <div class="card" id="appRoot">
+        <div id="dynamicContent"></div>
+        <footer>
+            🐱 Вайбкодинг × География по-братски | 10 вопросов, честный диагноз
+        </footer>
+    </div>
+</div>
+
+<script>
+    // ---------- ТЕ ЖЕ 10 ГЕОГРАФИЧЕСКИХ ВОПРОСОВ ----------
+    const QUESTIONS = [
+        { text: "Какое озеро является самым глубоким в мире?", options: ["Верхнее", "Танганьика", "Байкал", "Ньяса"], correct: 2, fact: "🌊 Байкал — 1642 метра. 20% всей пресной воды планеты, бро." },
+        { text: "Какой город находится на двух континентах?", options: ["Каир", "Стамбул", "Баку", "Астана"], correct: 1, fact: "🌉 Стамбул разделён Босфором: Европа и Азия. Уникальный движ." },
+        { text: "Какая страна не имеет рек?", options: ["Саудовская Аравия", "Оман", "Мальдивы", "Кувейт"], correct: 3, fact: "🏜️ Кувейт — вообще нет рек, только сухие вади. Жёстко." },
+        { text: "Где находится Пустыня Атакама — одно из самых сухих мест?", options: ["Перу", "Чили", "Аргентина", "Боливия"], correct: 1, fact: "🏜️ Чили, Атакама. Дождь раз в сто лет, но жизнь есть." },
+        { text: "Какой остров разделен между тремя государствами?", options: ["Кипр", "Новая Гвинея", "Борнео", "Ирландия"], correct: 2, fact: "🏝️ Борнео (Калимантан): Индонезия, Малайзия и Бруней." },
+        { text: "Какой из этих вулканов является действующим и находится в Евразии вне Камчатки и Курил?", options: ["Эльбрус", "Ключевская Сопка", "Казбек", "Белуха"], correct: 0, fact: "🗻 Эльбрус — стратовулкан, последний раз чихал 2000 лет назад." },
+        { text: "Какое из перечисленных государств не имеет выхода к морю?", options: ["Польша", "Венгрия", "Хорватия", "Литва"], correct: 1, fact: "🇭🇺 Венгрия — сухопутная, зато озеро Балатон." },
+        { text: "Какая столица находится на самой большой высоте над уровнем моря?", options: ["Кито", "Богота", "Ла-Пас", "Тхимпху"], correct: 2, fact: "⛰️ Ла-Пас, Боливия — 3640 метров. Крыша мира, реально." },
+        { text: "Какую реку называют «Волгой Африки»?", options: ["Конго", "Нил", "Нигер", "Замбези"], correct: 2, fact: "🏞️ Нигер — кормилец Западной Африки, как наша Волга." },
+        { text: "Какой из этих городов расположен на побережье Тихого океана?", options: ["Барселона", "Ванкувер", "Марсель", "Неаполь"], correct: 1, fact: "🍁 Ванкувер, Тихий океан. Барселона — Средиземка, не катит." }
+    ];
+
+    // состояние
+    let userAnswers = new Array(10).fill(null);
+    let currentIndex = 0;
+    let testFinished = false;
+
+    const dynamicDiv = document.getElementById("dynamicContent");
+
+    function saveToLocal() {
+        localStorage.setItem("geoBratTest", JSON.stringify({
+            answers: userAnswers,
+            finished: testFinished,
+            current: currentIndex
+        }));
+    }
+
+    function loadFromLocal() {
+        const raw = localStorage.getItem("geoBratTest");
+        if (!raw) return false;
+        try {
+            const d = JSON.parse(raw);
+            if (d.answers?.length === 10) {
+                userAnswers = d.answers;
+                testFinished = d.finished || false;
+                currentIndex = (d.current >= 0 && d.current < 10) ? d.current : 0;
+                if (testFinished) currentIndex = 10;
+                return true;
+            }
+        } catch(e) {}
+        return false;
+    }
+
+    function resetTest() {
+        userAnswers = new Array(10).fill(null);
+        testFinished = false;
+        currentIndex = 0;
+        localStorage.removeItem("geoBratTest");
+        render();
+    }
+
+    function selectAnswer(optIdx) {
+        if (testFinished) return;
+        userAnswers[currentIndex] = optIdx;
+        saveToLocal();
+        if (currentIndex + 1 < 10) {
+            currentIndex++;
+            render();
+        } else {
+            testFinished = true;
+            saveToLocal();
+            render();
+        }
+    }
+
+    function goBack() {
+        if (testFinished || currentIndex === 0) return;
+        currentIndex--;
+        render();
+    }
+
+    function computeScore() {
+        let correct = 0;
+        for (let i = 0; i < 10; i++) {
+            if (userAnswers[i] !== null && userAnswers[i] === QUESTIONS[i].correct) correct++;
+        }
+        return correct;
+    }
+
+    // ---------- НОВАЯ ПАЦАНСКАЯ КОНЦОВКА (чилловый диагноз) ----------
+    function getVerdict(score) {
+        switch (score) {
+            case 10: return "🤯 ТЫ ГЕНИЙ ГЕОГРАФИИ! Атлас целует тебя в лоб. Братан, респект!";
+            case 9: return "🧭 ХОРОШ, ЧУВАК! Очень мощно. Одна маленькая зацепка — и был бы богом.";
+            case 8: return "👍 БРАТ, НУ НОРМАЛЬНО. Твёрдый середняк, но с большим потенциалом.";
+            case 7: return "😐 ЧУВАК, НО МОЖНО БЫЛО И ЛУЧШЕ. Не позор, но осадочек остался.";
+            case 6: return "🤨 БРАТ, ДА ТЫ ГОНИШЬ? Шесть из десяти — такое себе, пересдавай.";
+            case 5: return "🚗 ТОЙОТА, МАТЬ… НУ ЧТО ЭТО ТАКОЕ? Пять — как день зарплаты, но могло быть круче.";
+            case 4: return "🤦‍♂️ НУ ЙОШКАР-ОЛА, НУ ЧТО ЭТО ТАКОЕ? Ты где был на уроках географии?";
+            case 3: return "🍃 НУ ТЫ ЛОХ, КОНЕЧНО. Три правильных ответа — это уже диагноз. Срочно открывай карту мира.";
+            case 2: return "💀 У МЕНЯ НЕТ КОММЕНТАРИЕВ. Два балла — это даже не провал, это катастрофа, бро.";
+            case 1: return "😶‍🌫️ НУ… СИТУАЦИЯ. Один правильный ответ. Ты уверен, что это была Земля?";
+            default: return "🍂 МДА. НОЛЬ? Ты вообще на нашей планете живёшь? Перезагрузка.";
+        }
+    }
+
+    function render() {
+        if (testFinished) {
+            renderResult();
+        } else {
+            renderQuestion();
+        }
+        updateProgress();
+    }
+
+    function updateProgress() {
+        const fill = document.querySelector(".progress-fill");
+        const span = document.querySelector(".counter-text");
+        if (fill && span) {
+            const answered = userAnswers.filter(a => a !== null).length;
+            fill.style.width = `${(answered / 10) * 100}%`;
+            span.innerText = `${answered} из 10 вопросов`;
+        }
+    }
+
+    function renderQuestion() {
+        const q = QUESTIONS[currentIndex];
+        const selected = userAnswers[currentIndex];
+        const answeredCount = userAnswers.filter(a => a !== null).length;
+
+        let feedback = '';
+        if (selected !== null) {
+            const isCorrect = (selected === q.correct);
+            const correctLetter = String.fromCharCode(65 + q.correct);
+            const correctText = q.options[q.correct];
+            feedback = `
+                <div class="feedback-area">
+                    ${isCorrect ? '✅ Верняк!' : '❌ Не, не угадал.'}<br>
+                    <strong>Правильный ответ: ${correctLetter}. ${correctText}</strong><br>
+                    📌 ${q.fact}
+                </div>
+            `;
+        }
+
+        const html = `
+            <div class="header">
+                <h1>🗺️ Геотест по-пацански</h1>
+                <div class="sub">10 вопросов на атмосферу. Жми на вариант — сразу узнаешь факт.</div>
+                <div class="progress-area"><div class="progress-fill" style="width: ${(answeredCount/10)*100}%"></div></div>
+                <div class="question-counter"><span class="counter-text">${answeredCount} из 10 вопросов</span> · Вопрос ${currentIndex+1}/10</div>
+            </div>
+            <div class="question-text">${escapeHtml(q.text)}</div>
+            <div class="options-list">
+                ${q.options.map((opt, idx) => `<div class="option ${selected === idx ? 'selected' : ''}" data-opt="${idx}">${String.fromCharCode(65+idx)}. ${escapeHtml(opt)}</div>`).join('')}
+            </div>
+            ${feedback}
+            <div class="nav-buttons">
+                <button id="backBtn" ${currentIndex === 0 ? 'disabled style="opacity:0.5"' : ''}>← Назад</button>
+                <button id="resetBtn" style="background:#eef2f7;">⟳ Начать заново</button>
+            </div>
+            ${selected === null ? '<div class="sub" style="margin-top:0.7rem;font-size:0.75rem;">🔥 Выбирай ответ — сразу узнаешь правду</div>' : ''}
+        `;
+        dynamicDiv.innerHTML = html;
+
+        if (selected === null) {
+            document.querySelectorAll('.option').forEach(el => {
+                const idx = parseInt(el.dataset.opt);
+                el.addEventListener('click', () => selectAnswer(idx));
+            });
+        }
+        document.getElementById('backBtn')?.addEventListener('click', goBack);
+        document.getElementById('resetBtn')?.addEventListener('click', resetTest);
+    }
+
+    function renderResult() {
+        const score = computeScore();
+        const verdict = getVerdict(score);
+        let details = '';
+        for (let i = 0; i < QUESTIONS.length; i++) {
+            const q = QUESTIONS[i];
+            const userOpt = userAnswers[i];
+            const isCorrect = (userOpt === q.correct);
+            const userLet = userOpt !== null ? String.fromCharCode(65+userOpt) : '?';
+            const correctLet = String.fromCharCode(65+q.correct);
+            details += `<div style="font-size:0.8rem; margin-bottom:7px;">${i+1}. ${isCorrect ? '✅' : '❌'} Твой: ${userLet} | Правильный: ${correctLet} (${q.options[q.correct].substring(0,40)})</div>`;
+        }
+
+        const html = `
+            <div class="result-card">
+                <div class="header">
+                    <h1>🔮 Диагноз по-братски</h1>
+                    <div class="progress-area"><div class="progress-fill" style="width:100%"></div></div>
+                </div>
+                <div style="margin: 1rem 0; background: #f2f7f2; border-radius: 48px; padding: 1rem;">
+                    <div style="font-size: 2.4rem; font-weight: 800;">${score}/10</div>
+                    <div class="verdict">${verdict}</div>
+                </div>
+                <details style="margin: 0.5rem 0;">
+                    <summary style="cursor:pointer; font-weight:600; color:#1e6e49;">📖 Разбор полётов (спойлеры)</summary>
+                    <div style="margin-top: 0.8rem; text-align:left;">${details}</div>
+                </details>
+                <button id="restartBtnResult" class="restart-btn" style="margin-top: 1.2rem;">🌍 Пройти ещё раз</button>
+            </div>
+        `;
+        dynamicDiv.innerHTML = html;
+        document.getElementById('restartBtnResult')?.addEventListener('click', resetTest);
+    }
+
+    function escapeHtml(str) {
+        return str.replace(/[&<>]/g, function(m) {
+            if (m === '&') return '&amp;';
+            if (m === '<') return '&lt;';
+            if (m === '>') return '&gt;';
+            return m;
+        });
+    }
+
+    (function init() {
+        const loaded = loadFromLocal();
+        if (!loaded) {
+            userAnswers.fill(null);
+            testFinished = false;
+            currentIndex = 0;
+        }
+        render();
+    })();
+</script>
+</body>
+</html>
